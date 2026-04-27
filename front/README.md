@@ -166,14 +166,6 @@ Las interfaces en `src/app/interfaces` tipan las respuestas y payloads esperados
 - scroll horizontal controlado para tablas en pantallas pequenas
 - formularios a una columna en movil
 
-## Responsive design
-
-Se agregaron breakpoints en `bank-page.component.scss`:
-
-- hasta `1000px`: sidebar superior, formularios en una columna y buscador ancho completo
-- hasta `720px`: acciones apiladas, tablas con scroll horizontal y modal adaptado
-- hasta `520px`: navegacion en una columna, cards compactas y formularios mas densos
-
 ## Ejecutar local
 
 Instalar dependencias:
@@ -200,6 +192,36 @@ http://localhost:4200
 npm run build
 ```
 
+## Docker
+
+El `Dockerfile` usa una imagen base `nginx:1.27-alpine`. Primero se debe compilar el proyecto y luego construir la imagen.
+
+**1. Compilar el proyecto:**
+
+```bash
+npm run build
+```
+
+**2. Construir la imagen:**
+
+```bash
+docker build -t bank-front .
+```
+
+**3. Correr el contenedor:**
+
+```bash
+docker run -d -p 80:80 --name bank-front bank-front
+```
+
+URL:
+
+```text
+http://localhost
+```
+
+> El contenedor sirve los archivos estaticos de `dist/bank-front-runtime/` a traves de nginx en el puerto 80. La configuracion de nginx reorienta todas las rutas a `index.html` para soportar el enrutamiento de Angular.
+
 ## Pruebas
 
 ```bash
@@ -208,6 +230,4 @@ npm test
 
 ## Notas
 
-- Se removio la dependencia obligatoria al registry privado de Pichincha para poder instalar y compilar localmente.
-- La configuracion actual usa el builder estandar de Angular para evitar problemas de carga como `import.meta may only appear in a module`.
 - El backend debe estar corriendo en `http://localhost:8080/api` para que las integraciones funcionen.
