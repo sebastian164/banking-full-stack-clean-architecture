@@ -1,0 +1,26 @@
+<aside class="bank-sidebar">
+  <div class="brand">
+    <img class="brand-logo" src="assets/banco-pichincha-logo.jpg" alt="Banco Pichincha" />
+    <strong>BANCO<br />PICHINCHA</strong>
+  </div>
+
+  <nav aria-label="Secciones">
+    <button [class.active]="section === 'clientes'" type="button" (click)="sectionChange.emit('clientes')">
+      <span class="nav-icon">C</span> Clientes
+    </button>
+    <button [class.active]="section === 'cuentas'" type="button" (click)="sectionChange.emit('cuentas')">
+      <span class="nav-icon">$</span> Cuentas
+    </button>
+    <button [class.active]="section === 'movimientos'" type="button" (click)="sectionChange.emit('movimientos')">
+      <span class="nav-icon">M</span> Movimientos
+    </button>
+    <button [class.active]="section === 'reportes'" type="button" (click)="sectionChange.emit('reportes')">
+      <span class="nav-icon">R</span> Reportes
+    </button>
+  </nav>
+
+  <footer class="sidebar-footer">
+    <div><span class="lock-icon"></span>Sesion segura</div>
+    <div>Usuario: operador.bp</div>
+  </footer>
+</aside>

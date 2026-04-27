@@ -1,0 +1,51 @@
+<section class="panel form-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>Nuevo movimiento</h3>
+      <p>Registra creditos y debitos con validacion de saldo.</p>
+    </div>
+  </div>
+  <form (ngSubmit)="saveMovement.emit()" class="form-grid">
+    <label class="field"><span>Fecha</span><input type="date" [(ngModel)]="movementForm.date" name="date" /></label>
+    <label class="field"><span>Tipo</span><select [(ngModel)]="movementForm.type" name="movementType"><option>CREDITO</option><option>DEBITO</option></select></label>
+    <label class="field"><span>Valor</span><input type="text" placeholder="0" inputmode="numeric" pattern="[0-9]*" [(ngModel)]="movementForm.value" name="value" (keydown)="integerKey.emit($event)" (input)="digitsOnly.emit($event)" /></label>
+    <label class="field wide"><span>Cuenta</span><select [(ngModel)]="movementForm.accountNumber" name="accountNumber">
+      @for (account of accounts; track account.id) {
+        <option [ngValue]="account.number">{{ account.number }} - {{ account.clientName }}</option>
+      }
+    </select></label>
+    <div class="form-actions"><button class="primary-action" type="submit">Registrar movimiento</button></div>
+  </form>
+</section>
+
+<section class="panel data-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>Movimientos</h3>
+      <p>{{ displayedMovements().length }} resultados visibles</p>
+    </div>
+    <label class="search-box table-search">
+      <span class="search-icon"></span>
+      <input placeholder="Buscar registros" [ngModel]="search" (ngModelChange)="searchChange.emit($event)" />
+    </label>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Fecha</th><th>Cuenta</th><th>Tipo</th><th>Valor</th><th>Saldo</th><th></th></tr></thead>
+      <tbody>
+        @for (movement of displayedMovements(); track movement.id) {
+          <tr>
+            <td>{{ movement.date }}</td>
+            <td><strong>{{ movement.accountNumber }}</strong></td>
+            <td>{{ movement.type }}</td>
+            <td>{{ movement.value | currency:'USD' }}</td>
+            <td>{{ movement.balance | currency:'USD' }}</td>
+            <td class="actions-cell"><button class="danger" type="button" (click)="deleteMovement.emit(movement.id)">Eliminar</button></td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="empty-state">No hay movimientos para mostrar.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

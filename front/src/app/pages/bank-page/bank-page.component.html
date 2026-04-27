@@ -1,0 +1,85 @@
+<main class="bank-shell">
+  <app-bank-sidebar [section]="section" (sectionChange)="selectSection($event)" />
+
+  <section class="bank-content">
+    <header class="bank-header">
+      <div>
+        <h2>{{ section | titlecase }}</h2>
+      </div>
+    </header>
+
+    <app-summary-cards
+      [clients]="clients.length"
+      [accounts]="accounts.length"
+      [movements]="movements.length"
+    />
+
+    @if (section === 'clientes') {
+      <app-clients-view
+        [clients]="clients"
+        [clientForm]="clientForm"
+        [search]="search"
+        (searchChange)="search = $event"
+        (saveClient)="saveClient()"
+        (editClient)="openClientEditor($event)"
+        (deleteClient)="delete('clientes', $event)"
+        (integerKey)="onlyIntegerKey($event)"
+        (digitsOnly)="keepDigitsOnly($event.field, $event.event)"
+      />
+    }
+
+    @if (section === 'cuentas') {
+      <app-accounts-view
+        [accounts]="accounts"
+        [clients]="clients"
+        [accountForm]="accountForm"
+        [search]="search"
+        (searchChange)="search = $event"
+        (saveAccount)="saveAccount()"
+        (deleteAccount)="delete('cuentas', $event)"
+        (integerKey)="onlyIntegerKey($event)"
+        (digitsOnly)="keepDigitsOnly($event.field, $event.event)"
+      />
+    }
+
+    @if (section === 'movimientos') {
+      <app-movements-view
+        [accounts]="accounts"
+        [movements]="movements"
+        [movementForm]="movementForm"
+        [search]="search"
+        (searchChange)="search = $event"
+        (saveMovement)="saveMovement()"
+        (deleteMovement)="delete('movimientos', $event)"
+        (integerKey)="onlyIntegerKey($event)"
+        (digitsOnly)="keepDigitsOnly('movementValue', $event)"
+      />
+    }
+
+    @if (section === 'reportes') {
+      <app-reports-view
+        [clients]="clients"
+        [reportForm]="reportForm"
+        [report]="report"
+        [search]="search"
+        (searchChange)="search = $event"
+        (generateReport)="generateReport()"
+        (downloadReport)="downloadReport()"
+      />
+    }
+  </section>
+
+  @if (editingClient) {
+    <app-client-edit-modal
+      [client]="editingClient"
+      (save)="updateClient()"
+      (close)="closeClientEditor()"
+      (integerKey)="onlyIntegerKey($event)"
+      (digitsOnly)="keepDigitsOnly($event.field, $event.event)"
+    />
+  }
+
+  @if (message) {
+    <app-toast [message]="message" [type]="messageType" (dismiss)="clearToast()" />
+  }
+</main>

@@ -1,0 +1,51 @@
+<section class="panel form-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>Nueva cuenta</h3>
+      <p>Asocia una cuenta a un cliente existente.</p>
+    </div>
+  </div>
+  <form (ngSubmit)="saveAccount.emit()" class="form-grid">
+    <label class="field"><span>Numero</span><input placeholder="Numero de cuenta" inputmode="numeric" pattern="[0-9]*" [(ngModel)]="accountForm.number" name="number" required (keydown)="integerKey.emit($event)" (input)="digitsOnly.emit({ field: 'accountNumber', event: $event })" /></label>
+    <label class="field"><span>Tipo</span><select [(ngModel)]="accountForm.type" name="accountType"><option>Ahorro</option><option>Corriente</option></select></label>
+    <label class="field"><span>Saldo inicial</span><input type="text" placeholder="0" inputmode="numeric" pattern="[0-9]*" [(ngModel)]="accountForm.initialBalance" name="initialBalance" (keydown)="integerKey.emit($event)" (input)="digitsOnly.emit({ field: 'accountInitialBalance', event: $event })" /></label>
+    <label class="field"><span>Cliente</span><select [(ngModel)]="accountForm.clientId" name="clientId">
+      @for (client of clients; track client.id) {
+        <option [ngValue]="client.id">{{ client.name }}</option>
+      }
+    </select></label>
+    <label class="check"><input type="checkbox" [(ngModel)]="accountForm.status" name="accountStatus" /> Activa</label>
+    <div class="form-actions"><button class="primary-action" type="submit">Guardar cuenta</button></div>
+  </form>
+</section>
+
+<section class="panel data-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>Cuentas registradas</h3>
+      <p>{{ filtered(accounts).length }} resultados visibles</p>
+    </div>
+    <label class="search-box table-search">
+      <span class="search-icon"></span>
+      <input placeholder="Buscar registros" [ngModel]="search" (ngModelChange)="searchChange.emit($event)" />
+    </label>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Numero</th><th>Tipo</th><th>Cliente</th><th>Saldo</th><th></th></tr></thead>
+      <tbody>
+        @for (account of filtered(accounts); track account.id) {
+          <tr>
+            <td><strong>{{ account.number }}</strong></td>
+            <td>{{ account.type }}</td>
+            <td>{{ account.clientName }}</td>
+            <td>{{ account.currentBalance | currency:'USD' }}</td>
+            <td class="actions-cell"><button class="danger" type="button" (click)="deleteAccount.emit(account.id)">Eliminar</button></td>
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="empty-state">No hay cuentas para mostrar.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

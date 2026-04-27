@@ -1,0 +1,5 @@
+<section class="toast" [class.toast-error]="type === 'error'" role="status" aria-live="polite">
+  <span class="toast-icon"></span>
+  <p>{{ message }}</p>
+  <button type="button" aria-label="Cerrar mensaje" (click)="dismiss.emit()">x</button>
+</section>

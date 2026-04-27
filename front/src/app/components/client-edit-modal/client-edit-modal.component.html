@@ -1,0 +1,28 @@
+<section class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Editar cliente">
+  <form class="modal-card" (ngSubmit)="save.emit()">
+    <header class="modal-header">
+      <div>
+        <h3>Editar cliente</h3>
+        <p>Actualiza los datos editables del cliente.</p>
+      </div>
+      <button class="icon-button" type="button" aria-label="Cerrar" (click)="close.emit()">x</button>
+    </header>
+
+    <div class="form-grid modal-grid">
+      <label class="field disabled"><span>ID</span><input [ngModel]="client.id" name="editId" disabled /></label>
+      <label class="field"><span>Nombre</span><input [(ngModel)]="client.name" name="editName" required /></label>
+      <label class="field"><span>Genero</span><select [(ngModel)]="client.gender" name="editGender"><option value="Masculino">Masculino</option><option value="Femenino">Femenino</option><option value="Otro">Otro</option></select></label>
+      <label class="field"><span>Edad</span><input type="text" inputmode="numeric" pattern="[0-9]*" [(ngModel)]="client.age" name="editAge" (keydown)="integerKey.emit($event)" (input)="digitsOnly.emit({ field: 'editAge', event: $event })" /></label>
+      <label class="field disabled"><span>Identificacion</span><input [(ngModel)]="client.identification" name="editIdentification" disabled /></label>
+      <label class="field wide"><span>Direccion</span><input [(ngModel)]="client.address" name="editAddress" /></label>
+      <label class="field"><span>Telefono</span><input inputmode="numeric" pattern="[0-9]*" [(ngModel)]="client.phone" name="editPhone" (keydown)="integerKey.emit($event)" (input)="digitsOnly.emit({ field: 'editPhone', event: $event })" /></label>
+      <label class="field"><span>Contrasena</span><input type="password" [(ngModel)]="client.password" name="editPassword" /></label>
+      <label class="check"><input type="checkbox" [(ngModel)]="client.status" name="editStatus" /> Activo</label>
+    </div>
+
+    <footer class="modal-actions">
+      <button class="secondary-action" type="button" (click)="close.emit()">Cancelar</button>
+      <button class="primary-action" type="submit">Guardar cambios</button>
+    </footer>
+  </form>
+</section>

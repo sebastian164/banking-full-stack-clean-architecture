@@ -1,0 +1,59 @@
+<section class="panel form-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>Estado de cuenta</h3>
+      <p>Consulta los movimientos por cliente y rango de fechas.</p>
+    </div>
+  </div>
+  <form class="form-grid">
+    <label class="field"><span>Cliente</span><select [(ngModel)]="reportForm.clientId" name="reportClient">
+      @for (client of clients; track client.id) {
+        <option [ngValue]="client.id">{{ client.name }}</option>
+      }
+    </select></label>
+    <label class="field"><span>Desde</span><input type="date" [(ngModel)]="reportForm.startDate" name="from" /></label>
+    <label class="field"><span>Hasta</span><input type="date" [(ngModel)]="reportForm.endDate" name="to" /></label>
+    <div class="form-actions two-actions">
+      <button class="primary-action" type="button" (click)="generateReport.emit()">Generar</button>
+      <button class="secondary-action pdf-action" type="button" (click)="downloadReport.emit()">Descargar PDF</button>
+    </div>
+  </form>
+</section>
+
+@if (report) {
+  <section class="panel data-panel">
+    <div class="panel-heading">
+      <div>
+        <h3>Resultado del reporte</h3>
+        <p>{{ filteredStatements().length }} movimientos encontrados</p>
+      </div>
+      <label class="search-box table-search">
+        <span class="search-icon"></span>
+        <input placeholder="Buscar registros" [ngModel]="search" (ngModelChange)="searchChange.emit($event)" />
+      </label>
+    </div>
+    <div class="report-summary">
+      <span><strong>Debitos</strong>{{ report.totalDebits | currency:'USD' }}</span>
+      <span><strong>Creditos</strong>{{ report.totalCredits | currency:'USD' }}</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Fecha</th><th>Cliente</th><th>Cuenta</th><th>Tipo</th><th>Movimiento</th><th>Saldo disponible</th></tr></thead>
+        <tbody>
+          @for (row of filteredStatements(); track row.date + row.accountNumber + row.movement) {
+            <tr>
+              <td>{{ row.date }}</td>
+              <td>{{ row.client }}</td>
+              <td><strong>{{ row.accountNumber }}</strong></td>
+              <td>{{ row.accountType }}</td>
+              <td>{{ row.movement | currency:'USD' }}</td>
+              <td>{{ row.availableBalance | currency:'USD' }}</td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="empty-state">No hay movimientos en el rango seleccionado.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}

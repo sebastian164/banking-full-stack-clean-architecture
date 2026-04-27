@@ -1,0 +1,57 @@
+<section class="panel form-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>Nuevo cliente</h3>
+      <p>Registra la informacion basica del titular.</p>
+    </div>
+  </div>
+  <form (ngSubmit)="saveClient.emit()" class="form-grid">
+    <label class="field"><span>Nombre</span><input placeholder="Ej. Jose Lema" [(ngModel)]="clientForm.name" name="clientName" required /></label>
+    <label class="field"><span>Genero</span><select [(ngModel)]="clientForm.gender" name="gender" required><option value="Masculino">Masculino</option><option value="Femenino">Femenino</option><option value="Otro">Otro</option></select></label>
+    <label class="field"><span>Edad</span><input type="text" placeholder="18" inputmode="numeric" pattern="[0-9]*" [(ngModel)]="clientForm.age" name="age" (keydown)="integerKey.emit($event)" (input)="digitsOnly.emit({ field: 'clientAge', event: $event })" /></label>
+    <label class="field"><span>Identificacion</span><input placeholder="Numero de documento" inputmode="numeric" pattern="[0-9]*" [(ngModel)]="clientForm.identification" name="identification" required (input)="digitsOnly.emit({ field: 'clientIdentification', event: $event })" /></label>
+    <label class="field wide"><span>Direccion</span><input placeholder="Direccion residencial" [(ngModel)]="clientForm.address" name="address" /></label>
+    <label class="field"><span>Telefono</span><input placeholder="0999999999" inputmode="numeric" pattern="[0-9]*" [(ngModel)]="clientForm.phone" name="phone" (keydown)="integerKey.emit($event)" (input)="digitsOnly.emit({ field: 'clientPhone', event: $event })" /></label>
+    <label class="field"><span>Contrasena</span><input type="password" placeholder="1234" [(ngModel)]="clientForm.password" name="password" required /></label>
+    <label class="check"><input type="checkbox" [(ngModel)]="clientForm.status" name="clientStatus" /> Activo</label>
+    <div class="form-actions">
+      <button class="primary-action" type="submit">Guardar cliente</button>
+    </div>
+  </form>
+</section>
+
+<section class="panel data-panel">
+  <div class="panel-heading">
+    <div>
+      <h3>Clientes registrados</h3>
+      <p>{{ filtered(clients).length }} resultados visibles</p>
+    </div>
+    <label class="search-box table-search">
+      <span class="search-icon"></span>
+      <input placeholder="Buscar registros" [ngModel]="search" (ngModelChange)="searchChange.emit($event)" />
+    </label>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Nombre</th><th>Identificacion</th><th>Telefono</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody>
+        @for (client of filtered(clients); track client.id) {
+          <tr>
+            <td><strong>{{ client.name }}</strong></td>
+            <td>{{ client.identification }}</td>
+            <td>{{ client.phone }}</td>
+            <td><span class="status-pill" [class.inactive]="!client.status"><span></span>{{ client.status ? 'Activo' : 'Inactivo' }}</span></td>
+            <td class="actions-cell">
+              <div class="row-actions">
+                <button class="edit-action" type="button" (click)="editClient.emit(client)">Editar</button>
+                <button class="danger" type="button" (click)="deleteClient.emit(client.id)">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="empty-state">No hay clientes para mostrar.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
